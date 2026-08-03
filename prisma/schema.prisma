@@ -1,0 +1,126 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  phone        String   @unique
+  email        String?  @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  orders         Order[]
+  loyaltyBonus   LoyaltyBonus?
+}
+
+model Category {
+  id       String     @id @default(cuid())
+  slug     String     @unique
+  name     String
+  icon     String
+  parentId String?
+  parent   Category?  @relation("CategoryToParent", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryToParent")
+
+  products Product[]
+}
+
+model Product {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  name           String
+  description    String
+  composition    String?
+  price          Int
+  discountPrice  Int?
+  unit           String
+  emoji          String
+  stock          Int      @default(100)
+  isPopular      Boolean  @default(false)
+  rating         Float?
+  createdAt      DateTime @default(now())
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  orderItems OrderItem[]
+}
+
+model Branch {
+  id      String @id @default(cuid())
+  name    String
+  address String
+  lat     Float?
+  lng     Float?
+
+  orders Order[]
+}
+
+enum OrderStatus {
+  QABUL_QILINDI
+  TAYYORLANMOQDA
+  YOLDA
+  YETKAZILDI
+  BEKOR_QILINDI
+}
+
+enum DeliveryType {
+  YETKAZISH
+  OLIB_KETISH
+}
+
+enum PaymentMethod {
+  NAQD
+  KARTA
+  PAYME
+  CLICK
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  orderNumber   String        @unique
+  status        OrderStatus   @default(QABUL_QILINDI)
+  deliveryType  DeliveryType
+  address       String?
+  phone         String
+  paymentMethod PaymentMethod
+  deliveryFee   Int           @default(0)
+  totalPrice    Int
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
+  branchId String?
+  branch   Branch? @relation(fields: [branchId], references: [id])
+
+  items OrderItem[]
+}
+
+model OrderItem {
+  id       String @id @default(cuid())
+  quantity Int
+  price    Int
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model LoyaltyBonus {
+  id      String @id @default(cuid())
+  balance Int    @default(0)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+}

@@ -1,0 +1,17 @@
+node_modules
+dist
+
+# Keep environment variables out of version control
+.env
+
+/generated/prisma
+
+# SQLite database files
+*.db
+*.db-journal
+
+# Auto-installed Prisma CLI skill docs (not project source)
+/.claude
+/.agents
+/.windsurf
+skills-lock.json
