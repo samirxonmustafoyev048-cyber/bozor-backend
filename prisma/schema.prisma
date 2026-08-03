@@ -104,6 +104,8 @@ model Order {
   paymentMethod PaymentMethod
   deliveryFee   Int           @default(0)
   totalPrice    Int
+  paid          Boolean       @default(false)
+  paidAt        DateTime?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -113,7 +115,30 @@ model Order {
   branchId String?
   branch   Branch? @relation(fields: [branchId], references: [id])
 
-  items OrderItem[]
+  items    OrderItem[]
+  payments Payment[]
+}
+
+enum PaymentProvider {
+  PAYME
+  CLICK
+}
+
+model Payment {
+  id           String          @id @default(cuid())
+  provider     PaymentProvider
+  providerTxId String?
+  amount       Int
+  state        Int             @default(1)
+  reason       Int?
+  createTime   DateTime        @default(now())
+  performTime  DateTime?
+  cancelTime   DateTime?
+
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id])
+
+  @@unique([provider, providerTxId])
 }
 
 model OrderItem {
