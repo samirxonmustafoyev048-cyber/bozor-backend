@@ -8,6 +8,8 @@ import { OrdersModule } from './orders/orders.module';
 import { BranchesModule } from './branches/branches.module';
 import { AuthModule } from './auth/auth.module';
 import { PaymentsModule } from './payments/payments.module';
+import { UsersModule } from './users/users.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { PaymentsModule } from './payments/payments.module';
     BranchesModule,
     AuthModule,
     PaymentsModule,
+    UsersModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
