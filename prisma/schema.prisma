@@ -11,13 +11,24 @@ datasource db {
 model User {
   id           String   @id @default(cuid())
   name         String
-  phone        String   @unique
+  phone        String?  @unique
   email        String?  @unique
-  passwordHash String
+  passwordHash String?
   createdAt    DateTime @default(now())
 
-  orders         Order[]
-  loyaltyBonus   LoyaltyBonus?
+  orders       Order[]
+  loyaltyBonus LoyaltyBonus?
+}
+
+model OtpCode {
+  id        String   @id @default(cuid())
+  phone     String
+  codeHash  String
+  expiresAt DateTime
+  consumed  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([phone])
 }
 
 model Category {

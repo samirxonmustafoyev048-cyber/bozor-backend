@@ -19,7 +19,7 @@ function generateOrderNumber(): string {
 export class OrdersService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateOrderDto) {
+  async create(dto: CreateOrderDto, authUserId?: string) {
     const productIds = dto.items.map((item) => item.productId);
     const products = await this.prisma.product.findMany({
       where: { id: { in: productIds } },
@@ -48,7 +48,7 @@ export class OrdersService {
         branchId: dto.branchId,
         phone: dto.phone,
         paymentMethod: dto.paymentMethod,
-        userId: dto.userId,
+        userId: authUserId ?? dto.userId,
         deliveryFee,
         totalPrice: subtotal + deliveryFee,
         items: {

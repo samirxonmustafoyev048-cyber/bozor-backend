@@ -6,6 +6,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
 import { BranchesModule } from './branches/branches.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { BranchesModule } from './branches/branches.module';
     ProductsModule,
     OrdersModule,
     BranchesModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
