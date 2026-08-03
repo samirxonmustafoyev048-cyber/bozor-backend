@@ -1,0 +1,12 @@
+node_modules
+dist
+generated
+coverage
+*.db
+*.db-journal
+.env
+.env.local
+.git
+.claude
+.agents
+.windsurf
