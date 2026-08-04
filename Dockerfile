@@ -24,8 +24,9 @@ COPY --from=build /app/generated ./generated
 COPY package.json prisma.config.ts ./
 COPY prisma ./prisma
 
-# SQLite file lives here so it can be mounted as a persistent volume.
-VOLUME ["/app/data"]
+# SQLite file lives here — mount a persistent volume at /app/data on the
+# hosting platform (e.g. a Railway Volume) so data survives redeploys.
+RUN mkdir -p /app/data
 ENV DATABASE_URL="file:/app/data/prod.db"
 
 EXPOSE 4000
