@@ -15,3 +15,6 @@ dist
 /.agents
 /.windsurf
 skills-lock.json
+
+# Dev-server restart logs
+backend-restart*.log
