@@ -1,5 +1,8 @@
 import { OrdersService } from './orders.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { SettingsService } from '../settings/settings.service';
+import { PromoCodesService } from '../promo-codes/promo-codes.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 describe('OrdersService', () => {
   let prisma: {
@@ -11,6 +14,9 @@ describe('OrdersService', () => {
       update: jest.Mock;
     };
   };
+  let settingsService: { get: jest.Mock };
+  let promoCodesService: { validate: jest.Mock; incrementUsage: jest.Mock };
+  let notificationsService: { emit: jest.Mock };
   let service: OrdersService;
 
   beforeEach(() => {
@@ -23,7 +29,18 @@ describe('OrdersService', () => {
         update: jest.fn(),
       },
     };
-    service = new OrdersService(prisma as unknown as PrismaService);
+    settingsService = { get: jest.fn().mockResolvedValue({ deliveryFee: 15000 }) };
+    promoCodesService = {
+      validate: jest.fn(),
+      incrementUsage: jest.fn(),
+    };
+    notificationsService = { emit: jest.fn().mockResolvedValue(undefined) };
+    service = new OrdersService(
+      prisma as unknown as PrismaService,
+      settingsService as unknown as SettingsService,
+      promoCodesService as unknown as PromoCodesService,
+      notificationsService as unknown as NotificationsService,
+    );
   });
 
   it('charges the discounted price when a product has one, and adds the delivery fee for home delivery', async () => {

@@ -59,6 +59,7 @@ model Product {
   discountPrice  Int?
   unit           String
   emoji          String
+  imageUrl       String?
   stock          Int      @default(100)
   isPopular      Boolean  @default(false)
   rating         Float?
@@ -78,6 +79,18 @@ model Branch {
   lng     Float?
 
   orders Order[]
+}
+
+model Setting {
+  id             String   @id @default("singleton")
+  storeName      String   @default("Olma Market")
+  contactPhone   String   @default("+998 71 200 00 00")
+  contactEmail   String   @default("info@olmamarket.uz")
+  deliveryFee    Int      @default(15000)
+  telegramUrl    String?
+  instagramUrl   String?
+  facebookUrl    String?
+  updatedAt      DateTime @updatedAt
 }
 
 enum OrderStatus {
@@ -101,19 +114,21 @@ enum PaymentMethod {
 }
 
 model Order {
-  id            String        @id @default(cuid())
-  orderNumber   String        @unique
-  status        OrderStatus   @default(QABUL_QILINDI)
-  deliveryType  DeliveryType
-  address       String?
-  phone         String
-  paymentMethod PaymentMethod
-  deliveryFee   Int           @default(0)
-  totalPrice    Int
-  paid          Boolean       @default(false)
-  paidAt        DateTime?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id             String        @id @default(cuid())
+  orderNumber    String        @unique
+  status         OrderStatus   @default(QABUL_QILINDI)
+  deliveryType   DeliveryType
+  address        String?
+  phone          String
+  paymentMethod  PaymentMethod
+  deliveryFee    Int           @default(0)
+  discountAmount Int           @default(0)
+  promoCode      String?
+  totalPrice     Int
+  paid           Boolean       @default(false)
+  paidAt         DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id])
@@ -121,8 +136,27 @@ model Order {
   branchId String?
   branch   Branch? @relation(fields: [branchId], references: [id])
 
+  courierId String?
+  courier   Courier? @relation(fields: [courierId], references: [id])
+
   items    OrderItem[]
   payments Payment[]
+}
+
+enum CourierStatus {
+  ONLINE
+  OFFLINE
+}
+
+model Courier {
+  id                String        @id @default(cuid())
+  name              String
+  phone             String
+  status            CourierStatus @default(OFFLINE)
+  efficiencyPercent Int           @default(90)
+  createdAt         DateTime      @default(now())
+
+  orders Order[]
 }
 
 enum PaymentProvider {
@@ -165,4 +199,50 @@ model LoyaltyBonus {
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id])
+}
+
+enum PromoCodeType {
+  PERCENT
+  AMOUNT
+}
+
+model PromoCode {
+  id             String        @id @default(cuid())
+  code           String        @unique
+  type           PromoCodeType @default(PERCENT)
+  value          Int
+  minOrderAmount Int           @default(0)
+  maxUses        Int?
+  usedCount      Int           @default(0)
+  active         Boolean       @default(true)
+  expiresAt      DateTime?
+  createdAt      DateTime      @default(now())
+}
+
+model Banner {
+  id        String   @id @default(cuid())
+  title     String
+  subtitle  String?
+  imageUrl  String
+  linkUrl   String?
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  entity    String
+  entityId  String?
+  actorName String
+  createdAt DateTime @default(now())
 }

@@ -42,6 +42,10 @@ export class CreateProductDto {
   @IsNotEmpty()
   emoji: string;
 
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
   @IsString()
   @IsNotEmpty()
   categoryId: string;

@@ -45,6 +45,10 @@ export class CreateOrderDto {
   @IsString()
   userId?: string;
 
+  @IsOptional()
+  @IsString()
+  promoCode?: string;
+
   @IsArray()
   @ArrayMinSize(1)
   @ValidateNested({ each: true })

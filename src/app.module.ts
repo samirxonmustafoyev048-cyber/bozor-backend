@@ -12,6 +12,11 @@ import { AuthModule } from './auth/auth.module';
 import { PaymentsModule } from './payments/payments.module';
 import { UsersModule } from './users/users.module';
 import { AdminModule } from './admin/admin.module';
+import { SettingsModule } from './settings/settings.module';
+import { PromoCodesModule } from './promo-codes/promo-codes.module';
+import { BannersModule } from './banners/banners.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { AuditLogModule } from './audit-log/audit-log.module';
 
 @Module({
   imports: [
@@ -25,6 +30,11 @@ import { AdminModule } from './admin/admin.module';
     PaymentsModule,
     UsersModule,
     AdminModule,
+    SettingsModule,
+    PromoCodesModule,
+    BannersModule,
+    NotificationsModule,
+    AuditLogModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

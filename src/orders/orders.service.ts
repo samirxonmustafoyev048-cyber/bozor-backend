@@ -5,10 +5,11 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { DeliveryType } from '../../generated/prisma/enums';
+import { SettingsService } from '../settings/settings.service';
+import { PromoCodesService } from '../promo-codes/promo-codes.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
-
-const DELIVERY_FEE = 15000;
 
 function generateOrderNumber(): string {
   const random = Math.floor(100000 + Math.random() * 900000);
@@ -17,7 +18,12 @@ function generateOrderNumber(): string {
 
 @Injectable()
 export class OrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private settingsService: SettingsService,
+    private promoCodesService: PromoCodesService,
+    private notificationsService: NotificationsService,
+  ) {}
 
   async create(dto: CreateOrderDto, authUserId?: string) {
     const productIds = dto.items.map((item) => item.productId);
@@ -37,10 +43,22 @@ export class OrdersService {
       (sum, item) => sum + priceById.get(item.productId)! * item.quantity,
       0,
     );
+    const settings = await this.settingsService.get();
     const deliveryFee =
-      dto.deliveryType === DeliveryType.YETKAZISH ? DELIVERY_FEE : 0;
+      dto.deliveryType === DeliveryType.YETKAZISH
+        ? settings.deliveryFee
+        : 0;
 
-    return this.prisma.order.create({
+    let discountAmount = 0;
+    if (dto.promoCode) {
+      const result = await this.promoCodesService.validate(
+        dto.promoCode,
+        subtotal,
+      );
+      discountAmount = result.discountAmount;
+    }
+
+    const order = await this.prisma.order.create({
       data: {
         orderNumber: generateOrderNumber(),
         deliveryType: dto.deliveryType,
@@ -50,7 +68,9 @@ export class OrdersService {
         paymentMethod: dto.paymentMethod,
         userId: authUserId ?? dto.userId,
         deliveryFee,
-        totalPrice: subtotal + deliveryFee,
+        discountAmount,
+        promoCode: dto.promoCode?.toUpperCase(),
+        totalPrice: Math.max(0, subtotal + deliveryFee - discountAmount),
         items: {
           create: dto.items.map((item) => ({
             productId: item.productId,
@@ -61,6 +81,17 @@ export class OrdersService {
       },
       include: { items: { include: { product: true } }, branch: true },
     });
+
+    if (dto.promoCode) {
+      await this.promoCodesService.incrementUsage(dto.promoCode);
+    }
+
+    await this.notificationsService.emit(
+      'Yangi buyurtma',
+      `${order.orderNumber} — ${order.totalPrice} so'm, ${order.phone}`,
+    );
+
+    return order;
   }
 
   findAll(userId?: string) {

@@ -14,4 +14,14 @@ export class AdminController {
   getStats() {
     return this.adminService.getStats();
   }
+
+  @Get('delivery-stats')
+  getDeliveryStats() {
+    return this.adminService.getDeliveryStats();
+  }
+
+  @Get('payments')
+  getPayments() {
+    return this.adminService.getPayments();
+  }
 }
