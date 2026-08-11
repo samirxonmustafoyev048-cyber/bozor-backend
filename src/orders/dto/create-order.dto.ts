@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
@@ -7,10 +7,16 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
   Min,
   ValidateNested,
 } from 'class-validator';
 import { DeliveryType, PaymentMethod } from '../../../generated/prisma/enums';
+import {
+  UZ_PHONE_MESSAGE,
+  UZ_PHONE_REGEX,
+  normalizeUzPhone,
+} from '../../common/phone';
 
 export class OrderItemInput {
   @IsString()
@@ -36,6 +42,8 @@ export class CreateOrderDto {
 
   @IsString()
   @IsNotEmpty()
+  @Transform(({ value }) => normalizeUzPhone(value))
+  @Matches(UZ_PHONE_REGEX, { message: UZ_PHONE_MESSAGE })
   phone: string;
 
   @IsEnum(PaymentMethod)
