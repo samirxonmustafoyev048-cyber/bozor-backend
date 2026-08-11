@@ -9,6 +9,7 @@ import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { PhoneLoginDto } from './dto/phone-login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 
 const OTP_TTL_MS = 5 * 60 * 1000;
@@ -87,6 +88,26 @@ export class AuthService {
         data: { phone, name: name?.trim() || 'Mijoz' },
       });
     }
+
+    return this.issueTokens(user);
+  }
+
+  /**
+   * Signs in by phone number alone, creating the account on first use.
+   *
+   * NOTE: nothing proves the caller owns the number — knowing someone's phone
+   * is enough to sign in as them. That is the tradeoff of dropping the SMS
+   * code; requestOtp/verifyOtp above stay in place for when an SMS gateway
+   * (Eskiz, Play Mobile) is wired up and this can be swapped back.
+   */
+  async phoneLogin(dto: PhoneLoginDto) {
+    const name = `${dto.firstName.trim()} ${dto.lastName.trim()}`.trim();
+
+    const user = await this.prisma.user.upsert({
+      where: { phone: dto.phone },
+      update: { name },
+      create: { phone: dto.phone, name },
+    });
 
     return this.issueTokens(user);
   }

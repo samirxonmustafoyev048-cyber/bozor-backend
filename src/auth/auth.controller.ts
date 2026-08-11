@@ -5,6 +5,7 @@ import { RequestOtpDto } from './dto/request-otp.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { PhoneLoginDto } from './dto/phone-login.dto';
 import { RefreshDto } from './dto/refresh.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -15,6 +16,13 @@ import type { User } from '../../generated/prisma/client';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  @Post('phone-login')
+  phoneLogin(@Body() dto: PhoneLoginDto) {
+    return this.authService.phoneLogin(dto);
+  }
+
+  // Kept for when an SMS gateway is connected — see AuthService.phoneLogin.
   @Throttle({ default: { limit: 3, ttl: 60_000 } })
   @Post('otp/request')
   requestOtp(@Body() dto: RequestOtpDto) {
