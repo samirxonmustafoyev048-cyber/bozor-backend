@@ -10,6 +10,10 @@ export class CreateBranchDto {
   address: string;
 
   @IsOptional()
+  @IsString()
+  imageUrl?: string;
+
+  @IsOptional()
   @IsNumber()
   lat?: number;
 

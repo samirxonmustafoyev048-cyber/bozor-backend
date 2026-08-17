@@ -78,6 +78,8 @@ model Branch {
   id      String @id @default(cuid())
   name    String
   address String
+  /// Storefront photo shown on the public branches page.
+  imageUrl String?
   lat     Float?
   lng     Float?
 
