@@ -4,11 +4,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { DeliveryType } from '../../generated/prisma/enums';
+import { DeliveryType, OrderStatus } from '../../generated/prisma/enums';
 import { SettingsService } from '../settings/settings.service';
 import { PromoCodesService } from '../promo-codes/promo-codes.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { CreatePosOrderDto } from './dto/create-pos-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 
 function generateOrderNumber(): string {
@@ -88,8 +89,67 @@ export class OrdersService {
 
     await this.notificationsService.emit(
       'Yangi buyurtma',
-      `${order.orderNumber} — ${order.totalPrice} so'm, ${order.phone}`,
+      `${order.orderNumber} — ${order.totalPrice} so'm${order.phone ? `, ${order.phone}` : ''}`,
     );
+
+    return order;
+  }
+
+  /**
+   * A sale rung up at the till: no delivery, already paid, and closed the
+   * moment it is created — the customer is walking out with the goods.
+   */
+  async createPosSale(dto: CreatePosOrderDto, cashierId: string) {
+    const productIds = dto.items.map((item) => item.productId);
+    const products = await this.prisma.product.findMany({
+      where: { id: { in: productIds } },
+    });
+
+    if (products.length !== productIds.length) {
+      throw new BadRequestException("Ba'zi mahsulotlar topilmadi");
+    }
+
+    const priceById = new Map(
+      products.map((p) => [p.id, p.discountPrice ?? p.price]),
+    );
+    const totalPrice = dto.items.reduce(
+      (sum, item) => sum + priceById.get(item.productId)! * item.quantity,
+      0,
+    );
+
+    const order = await this.prisma.order.create({
+      data: {
+        orderNumber: generateOrderNumber(),
+        deliveryType: DeliveryType.OLIB_KETISH,
+        branchId: dto.branchId,
+        phone: dto.phone,
+        paymentMethod: dto.paymentMethod,
+        status: OrderStatus.YETKAZILDI,
+        paid: true,
+        paidAt: new Date(),
+        deliveryFee: 0,
+        totalPrice,
+        userId: cashierId,
+        items: {
+          create: dto.items.map((item) => ({
+            productId: item.productId,
+            quantity: item.quantity,
+            price: priceById.get(item.productId)!,
+          })),
+        },
+      },
+      include: { items: { include: { product: true } }, branch: true },
+    });
+
+    // Stock has physically left the shelf, so take it down here too.
+    await Promise.all(
+      dto.items.map((item) =>
+        this.prisma.product.update({
+          where: { id: item.productId },
+          data: { stock: { decrement: item.quantity } },
+        }),
+      ),
+    ).catch(() => undefined);
 
     return order;
   }

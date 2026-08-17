@@ -119,7 +119,7 @@ model Order {
   status         OrderStatus   @default(QABUL_QILINDI)
   deliveryType   DeliveryType
   address        String?
-  phone          String
+  phone          String?
   paymentMethod  PaymentMethod
   deliveryFee    Int           @default(0)
   discountAmount Int           @default(0)
