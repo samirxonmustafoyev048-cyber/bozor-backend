@@ -35,6 +35,11 @@ export class CreatePosOrderDto {
   @IsString()
   branchId?: string;
 
+  /** Last four digits only — the full number never leaves the till. */
+  @IsOptional()
+  @Matches(/^\d{4}$/, { message: "Karta raqamining oxirgi 4 raqami kutilmoqda" })
+  cardLast4?: string;
+
   @IsOptional()
   @Transform(({ value }) => (value ? normalizeUzPhone(value) : undefined))
   @Matches(UZ_PHONE_REGEX, { message: UZ_PHONE_MESSAGE })

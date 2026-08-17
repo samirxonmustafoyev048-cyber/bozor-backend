@@ -124,6 +124,7 @@ export class OrdersService {
         branchId: dto.branchId,
         phone: dto.phone,
         paymentMethod: dto.paymentMethod,
+        cardLast4: dto.cardLast4,
         status: OrderStatus.YETKAZILDI,
         paid: true,
         paidAt: new Date(),

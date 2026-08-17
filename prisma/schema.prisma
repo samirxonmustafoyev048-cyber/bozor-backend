@@ -124,6 +124,9 @@ model Order {
   address        String?
   phone          String?
   paymentMethod  PaymentMethod
+  /// Only the last four digits of the card are kept: enough for a receipt
+  /// and for reconciling with the terminal, without holding a full PAN.
+  cardLast4      String?
   deliveryFee    Int           @default(0)
   discountAmount Int           @default(0)
   promoCode      String?
