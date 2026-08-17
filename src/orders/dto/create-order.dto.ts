@@ -49,6 +49,11 @@ export class CreateOrderDto {
   @IsEnum(PaymentMethod)
   paymentMethod: PaymentMethod;
 
+  /** Last four digits only — the full number never reaches the server. */
+  @IsOptional()
+  @Matches(/^\d{4}$/, { message: "Karta raqamining oxirgi 4 raqami kutilmoqda" })
+  cardLast4?: string;
+
   @IsOptional()
   @IsString()
   userId?: string;

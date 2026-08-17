@@ -67,6 +67,7 @@ export class OrdersService {
         branchId: dto.branchId,
         phone: dto.phone,
         paymentMethod: dto.paymentMethod,
+        cardLast4: dto.cardLast4,
         userId: authUserId ?? dto.userId,
         deliveryFee,
         discountAmount,
