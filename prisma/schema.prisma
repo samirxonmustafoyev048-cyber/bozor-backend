@@ -11,6 +11,8 @@ datasource db {
 enum Role {
   USER
   ADMIN
+  KASSIR
+  OMBORCHI
 }
 
 model User {
@@ -69,6 +71,7 @@ model Product {
   category   Category @relation(fields: [categoryId], references: [id])
 
   orderItems OrderItem[]
+  movements  StockMovement[]
 }
 
 model Branch {
@@ -245,4 +248,27 @@ model AuditLog {
   entityId  String?
   actorName String
   createdAt DateTime @default(now())
+}
+
+enum StockMovementType {
+  KIRIM
+  CHIQIM
+  TUZATISH
+}
+
+/// One stock adjustment made from the warehouse panel. Keeps a trail of who
+/// changed what, which a bare `stock` column on Product cannot answer.
+model StockMovement {
+  id         String            @id @default(cuid())
+  type       StockMovementType
+  quantity   Int
+  stockAfter Int
+  reason     String?
+  actorName  String
+  createdAt  DateTime          @default(now())
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId, createdAt])
 }

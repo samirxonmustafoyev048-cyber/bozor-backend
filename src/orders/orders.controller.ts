@@ -29,7 +29,7 @@ export class OrdersController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'KASSIR')
   @Post('pos')
   createPosSale(@Body() dto: CreatePosOrderDto, @CurrentUser() user: User) {
     return this.ordersService.createPosSale(dto, user.id);

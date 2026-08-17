@@ -17,6 +17,7 @@ import { PromoCodesModule } from './promo-codes/promo-codes.module';
 import { BannersModule } from './banners/banners.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
+import { StockModule } from './stock/stock.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AuditLogModule } from './audit-log/audit-log.module';
     BannersModule,
     NotificationsModule,
     AuditLogModule,
+    StockModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
