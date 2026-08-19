@@ -127,7 +127,11 @@ export class AdminService {
           price: true,
           quantity: true,
           product: {
-            select: { category: { select: { id: true, name: true, slug: true } } },
+            select: {
+              category: {
+                select: { id: true, name: true, slug: true, icon: true },
+              },
+            },
           },
         },
       }),
@@ -192,8 +196,12 @@ export class AdminService {
     const trends = {
       orders: trendPercent(recentOrdersRaw.length, priorOrdersRaw.length),
       revenue: trendPercent(
-        recentOrdersRaw.filter((o) => o.paid).reduce((s, o) => s + o.totalPrice, 0),
-        priorOrdersRaw.filter((o) => o.paid).reduce((s, o) => s + o.totalPrice, 0),
+        recentOrdersRaw
+          .filter((o) => o.paid)
+          .reduce((s, o) => s + o.totalPrice, 0),
+        priorOrdersRaw
+          .filter((o) => o.paid)
+          .reduce((s, o) => s + o.totalPrice, 0),
       ),
       users: trendPercent(recentUsersRaw.length, priorUsersRaw.length),
       products: trendPercent(recentProductsRaw.length, priorProductsRaw.length),
@@ -201,7 +209,14 @@ export class AdminService {
 
     const categoryTotals = new Map<
       string,
-      { id: string; name: string; slug: string; revenue: number; quantity: number }
+      {
+        id: string;
+        name: string;
+        slug: string;
+        icon: string;
+        revenue: number;
+        quantity: number;
+      }
     >();
     for (const item of soldItems) {
       const c = item.product.category;
@@ -209,6 +224,7 @@ export class AdminService {
         id: c.id,
         name: c.name,
         slug: c.slug,
+        icon: c.icon,
         revenue: 0,
         quantity: 0,
       };
@@ -368,7 +384,10 @@ export class AdminService {
         countIn(recentOrdersRaw, ['BEKOR_QILINDI']),
         countIn(priorOrdersRaw, ['BEKOR_QILINDI']),
       ),
-      revenue: trendPercent(revenueIn(recentOrdersRaw), revenueIn(priorOrdersRaw)),
+      revenue: trendPercent(
+        revenueIn(recentOrdersRaw),
+        revenueIn(priorOrdersRaw),
+      ),
     };
 
     const avgDeliveryMinutes =

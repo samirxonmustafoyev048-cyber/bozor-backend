@@ -14,14 +14,14 @@ function categoryPhoto(slug: string) {
 }
 
 const categories = [
-  { slug: 'sut-mahsulotlari', name: 'Sut mahsulotlari', icon: '🥛' },
-  { slug: 'non-va-nonushta', name: 'Non va nonushta', icon: '🍞' },
-  { slug: 'gosht-va-baliq', name: "Go'sht va baliq", icon: '🥩' },
-  { slug: 'sabzavot-va-meva', name: 'Sabzavot va meva', icon: '🥦' },
-  { slug: 'ichimliklar', name: 'Ichimliklar', icon: '🧃' },
-  { slug: 'uy-rozgor', name: "Uy-ro'zg'or", icon: '🧴' },
-  { slug: 'shirinliklar', name: 'Shirinliklar', icon: '🍫' },
-  { slug: 'muzqaymoq', name: 'Muzqaymoq', icon: '🍦' },
+  { slug: 'sut-mahsulotlari', name: 'Sut mahsulotlari', icon: 'Milk' },
+  { slug: 'non-va-nonushta', name: 'Non va nonushta', icon: 'Croissant' },
+  { slug: 'gosht-va-baliq', name: "Go'sht va baliq", icon: 'Beef' },
+  { slug: 'sabzavot-va-meva', name: 'Sabzavot va meva', icon: 'Carrot' },
+  { slug: 'ichimliklar', name: 'Ichimliklar', icon: 'CupSoda' },
+  { slug: 'uy-rozgor', name: "Uy-ro'zg'or", icon: 'SprayCan' },
+  { slug: 'shirinliklar', name: 'Shirinliklar', icon: 'Candy' },
+  { slug: 'muzqaymoq', name: 'Muzqaymoq', icon: 'IceCreamCone' },
 ].map((c) => ({ ...c, imageUrl: categoryPhoto(c.slug) }));
 
 /**
@@ -44,7 +44,7 @@ const products = [
     price: 14000,
     discountPrice: 11500,
     unit: '1 l',
-    emoji: '🥛',
+    emoji: 'Milk',
     imageUrl: productPhoto('farmon-sut-2-5'), // unsplash 1576186726188-c9d70843790f
     isPopular: true,
     rating: 4.8,
@@ -58,7 +58,7 @@ const products = [
     categorySlug: 'sut-mahsulotlari',
     price: 9000,
     unit: '500 g',
-    emoji: '🍶',
+    emoji: 'Milk',
     imageUrl: productPhoto('qatiq'), // unsplash 1571212515416-fef01fc43637
     isPopular: true,
     rating: 4.6,
@@ -72,7 +72,7 @@ const products = [
     categorySlug: 'non-va-nonushta',
     price: 4000,
     unit: '1 dona',
-    emoji: '🍞',
+    emoji: 'Croissant',
     imageUrl: productPhoto('oq-non'), // unsplash 1693480532368-de842fb9dcf4
     isPopular: true,
     rating: 4.9,
@@ -86,7 +86,7 @@ const products = [
     price: 55000,
     discountPrice: 45000,
     unit: '1 kg',
-    emoji: '🍗',
+    emoji: 'Drumstick',
     imageUrl: productPhoto('tovuq-filesi'), // unsplash 1682991136736-a2b44623eeba
     rating: 4.7,
     description: "Muzlatilgan, sifat nazoratidan o'tgan tovuq ko'krak filesi.",
@@ -98,7 +98,7 @@ const products = [
     categorySlug: 'gosht-va-baliq',
     price: 95000,
     unit: '1 kg',
-    emoji: '🥩',
+    emoji: 'Beef',
     imageUrl: productPhoto('mol-goshti'), // unsplash 1690983321402-35ff91692b56
     rating: 4.5,
     description:
@@ -112,7 +112,7 @@ const products = [
     price: 12000,
     discountPrice: 8000,
     unit: '1 kg',
-    emoji: '🍅',
+    emoji: 'Carrot',
     imageUrl: productPhoto('pomidor'), // unsplash 1561619128-84d4badf416e
     stock: 20,
     isPopular: true,
@@ -125,7 +125,7 @@ const products = [
     categorySlug: 'sabzavot-va-meva',
     price: 16000,
     unit: '1 kg',
-    emoji: '🍎',
+    emoji: 'Apple',
     imageUrl: productPhoto('olma-qizil'), // unsplash 1621800656676-37d9e21e4f62
     isPopular: true,
     rating: 4.6,
@@ -138,7 +138,7 @@ const products = [
     price: 18000,
     discountPrice: 14000,
     unit: '1 kg',
-    emoji: '🍌',
+    emoji: 'Apple',
     imageUrl: productPhoto('banan'), // unsplash 1662150681339-867e940ea30d
     stock: 12,
     rating: 4.7,
@@ -150,7 +150,7 @@ const products = [
     categorySlug: 'ichimliklar',
     price: 13000,
     unit: '1.5 l',
-    emoji: '🥤',
+    emoji: 'CupSoda',
     imageUrl: productPhoto('coca-cola'), // unsplash 1567103472667-6898f3a79cf2
     isPopular: true,
     rating: 4.8,
@@ -163,7 +163,7 @@ const products = [
     price: 17000,
     discountPrice: 13500,
     unit: '1 l',
-    emoji: '🧃',
+    emoji: 'CupSoda',
     imageUrl: productPhoto('tabiiy-sharbat-olma'), // unsplash 1722874357621-e99d024b02f9
     stock: 15,
     rating: 4.5,
@@ -176,7 +176,7 @@ const products = [
     categorySlug: 'uy-rozgor',
     price: 22000,
     unit: '500 ml',
-    emoji: '🧴',
+    emoji: 'SprayCan',
     imageUrl: productPhoto('idish-yuvish-suyuqligi'), // unsplash 1585077082572-52c006739dcd
     stock: 18,
     rating: 4.3,
@@ -190,7 +190,7 @@ const products = [
     price: 21000,
     discountPrice: 17000,
     unit: '4 dona',
-    emoji: '🧻',
+    emoji: 'SprayCan',
     imageUrl: productPhoto('tualet-qogozi'), // unsplash 1674656801311-2442717f7968
     isPopular: true,
     rating: 4.6,
@@ -202,7 +202,7 @@ const products = [
     categorySlug: 'shirinliklar',
     price: 7000,
     unit: '1 dona',
-    emoji: '🍫',
+    emoji: 'Candy',
     imageUrl: productPhoto('shokolad-batonchasi'), // unsplash 1623660053975-cf75a8be0908
     rating: 4.7,
     description: "Sut shokoladi va yong'oq bilan to'ldirilgan batonchasi.",
@@ -214,7 +214,7 @@ const products = [
     price: 6000,
     discountPrice: 4500,
     unit: '1 dona',
-    emoji: '🍦',
+    emoji: 'IceCreamCone',
     imageUrl: productPhoto('muzqaymoq-vafli'), // unsplash 1629385701021-fcd568a743e8
     isPopular: true,
     rating: 4.9,
@@ -226,7 +226,7 @@ const products = [
     categorySlug: 'shirinliklar',
     price: 28000,
     unit: '1 dona',
-    emoji: '🍰',
+    emoji: 'Cookie',
     imageUrl: productPhoto('cheese-cake'), // unsplash 1702925614886-50ad13c88d3f
     rating: 4.8,
     description: "Nyu-York uslubidagi krem-pishloqli tort bo'lagi.",
@@ -238,7 +238,7 @@ const products = [
     price: 20000,
     discountPrice: 15000,
     unit: '1 kg',
-    emoji: '🫑',
+    emoji: 'Carrot',
     imageUrl: productPhoto('bulgor-qalampiri'), // unsplash 1563565375-f3fdfdbefa83
     stock: 8,
     rating: 4.4,
