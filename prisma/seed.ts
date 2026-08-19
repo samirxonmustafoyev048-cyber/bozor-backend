@@ -19,8 +19,16 @@ const categories = [
   { slug: 'muzqaymoq', name: 'Muzqaymoq', icon: '🍦' },
 ];
 
-function unsplashImage(photoId: string, width = 500) {
-  return `https://images.unsplash.com/photo-${photoId}?w=${width}&q=75&fit=crop&auto=format`;
+/**
+ * Product photos are served from our own origin, not hot-linked.
+ *
+ * images.unsplash.com is not resolvable from every network — when it is not,
+ * browsers report net::ERR_NAME_NOT_RESOLVED and every product picture on the
+ * site silently disappears. The originals are noted beside each call so they
+ * can be re-downloaded into bozor/public/photos/products/.
+ */
+function productPhoto(slug: string) {
+  return `/photos/products/${slug}.webp`;
 }
 
 const products = [
@@ -32,7 +40,7 @@ const products = [
     discountPrice: 11500,
     unit: '1 l',
     emoji: '🥛',
-    imageUrl: unsplashImage('1576186726188-c9d70843790f'),
+    imageUrl: productPhoto('farmon-sut-2-5'), // unsplash 1576186726188-c9d70843790f
     isPopular: true,
     rating: 4.8,
     description:
@@ -46,7 +54,7 @@ const products = [
     price: 9000,
     unit: '500 g',
     emoji: '🍶',
-    imageUrl: unsplashImage('1571212515416-fef01fc43637'),
+    imageUrl: productPhoto('qatiq'), // unsplash 1571212515416-fef01fc43637
     isPopular: true,
     rating: 4.6,
     description:
@@ -60,7 +68,7 @@ const products = [
     price: 4000,
     unit: '1 dona',
     emoji: '🍞',
-    imageUrl: unsplashImage('1693480532368-de842fb9dcf4'),
+    imageUrl: productPhoto('oq-non'), // unsplash 1693480532368-de842fb9dcf4
     isPopular: true,
     rating: 4.9,
     description: "Har kuni yangi pishiriladigan an'anaviy oq non.",
@@ -74,7 +82,7 @@ const products = [
     discountPrice: 45000,
     unit: '1 kg',
     emoji: '🍗',
-    imageUrl: unsplashImage('1682991136736-a2b44623eeba'),
+    imageUrl: productPhoto('tovuq-filesi'), // unsplash 1682991136736-a2b44623eeba
     rating: 4.7,
     description: "Muzlatilgan, sifat nazoratidan o'tgan tovuq ko'krak filesi.",
     composition: "100% tovuq go'shti",
@@ -86,7 +94,7 @@ const products = [
     price: 95000,
     unit: '1 kg',
     emoji: '🥩',
-    imageUrl: unsplashImage('1690983321402-35ff91692b56'),
+    imageUrl: productPhoto('mol-goshti'), // unsplash 1690983321402-35ff91692b56
     rating: 4.5,
     description:
       "Yangi, mahalliy fermerlardan yetkazib beriladigan mol go'shti.",
@@ -100,7 +108,7 @@ const products = [
     discountPrice: 8000,
     unit: '1 kg',
     emoji: '🍅',
-    imageUrl: unsplashImage('1561619128-84d4badf416e'),
+    imageUrl: productPhoto('pomidor'), // unsplash 1561619128-84d4badf416e
     stock: 20,
     isPopular: true,
     rating: 4.4,
@@ -113,7 +121,7 @@ const products = [
     price: 16000,
     unit: '1 kg',
     emoji: '🍎',
-    imageUrl: unsplashImage('1621800656676-37d9e21e4f62'),
+    imageUrl: productPhoto('olma-qizil'), // unsplash 1621800656676-37d9e21e4f62
     isPopular: true,
     rating: 4.6,
     description: "Shirin va sersuv qizil olmalar, bevosita bog'dan.",
@@ -126,7 +134,7 @@ const products = [
     discountPrice: 14000,
     unit: '1 kg',
     emoji: '🍌',
-    imageUrl: unsplashImage('1662150681339-867e940ea30d'),
+    imageUrl: productPhoto('banan'), // unsplash 1662150681339-867e940ea30d
     stock: 12,
     rating: 4.7,
     description: 'Yetilgan, shirin bananlar. Vitamin va kaliyga boy.',
@@ -138,7 +146,7 @@ const products = [
     price: 13000,
     unit: '1.5 l',
     emoji: '🥤',
-    imageUrl: unsplashImage('1567103472667-6898f3a79cf2'),
+    imageUrl: productPhoto('coca-cola'), // unsplash 1567103472667-6898f3a79cf2
     isPopular: true,
     rating: 4.8,
     description: 'Gazlangan alkogolsiz ichimlik, 1.5 litrli qadoqda.',
@@ -151,7 +159,7 @@ const products = [
     discountPrice: 13500,
     unit: '1 l',
     emoji: '🧃',
-    imageUrl: unsplashImage('1722874357621-e99d024b02f9'),
+    imageUrl: productPhoto('tabiiy-sharbat-olma'), // unsplash 1722874357621-e99d024b02f9
     stock: 15,
     rating: 4.5,
     description: "100% tabiiy olma sharbati, qo'shimcha shakarsiz.",
@@ -164,7 +172,7 @@ const products = [
     price: 22000,
     unit: '500 ml',
     emoji: '🧴',
-    imageUrl: unsplashImage('1585077082572-52c006739dcd'),
+    imageUrl: productPhoto('idish-yuvish-suyuqligi'), // unsplash 1585077082572-52c006739dcd
     stock: 18,
     rating: 4.3,
     description:
@@ -178,7 +186,7 @@ const products = [
     discountPrice: 17000,
     unit: '4 dona',
     emoji: '🧻',
-    imageUrl: unsplashImage('1674656801311-2442717f7968'),
+    imageUrl: productPhoto('tualet-qogozi'), // unsplash 1674656801311-2442717f7968
     isPopular: true,
     rating: 4.6,
     description: "Yumshoq, 3 qatlamli tualet qog'ozi, 4 donali o'ram.",
@@ -190,7 +198,7 @@ const products = [
     price: 7000,
     unit: '1 dona',
     emoji: '🍫',
-    imageUrl: unsplashImage('1623660053975-cf75a8be0908'),
+    imageUrl: productPhoto('shokolad-batonchasi'), // unsplash 1623660053975-cf75a8be0908
     rating: 4.7,
     description: "Sut shokoladi va yong'oq bilan to'ldirilgan batonchasi.",
   },
@@ -202,7 +210,7 @@ const products = [
     discountPrice: 4500,
     unit: '1 dona',
     emoji: '🍦',
-    imageUrl: unsplashImage('1629385701021-fcd568a743e8'),
+    imageUrl: productPhoto('muzqaymoq-vafli'), // unsplash 1629385701021-fcd568a743e8
     isPopular: true,
     rating: 4.9,
     description: 'Vafli qadoqdagi klassik plombir muzqaymoq.',
@@ -214,7 +222,7 @@ const products = [
     price: 28000,
     unit: '1 dona',
     emoji: '🍰',
-    imageUrl: unsplashImage('1702925614886-50ad13c88d3f'),
+    imageUrl: productPhoto('cheese-cake'), // unsplash 1702925614886-50ad13c88d3f
     rating: 4.8,
     description: "Nyu-York uslubidagi krem-pishloqli tort bo'lagi.",
   },
@@ -226,7 +234,7 @@ const products = [
     discountPrice: 15000,
     unit: '1 kg',
     emoji: '🫑',
-    imageUrl: unsplashImage('1563565375-f3fdfdbefa83'),
+    imageUrl: productPhoto('bulgor-qalampiri'), // unsplash 1563565375-f3fdfdbefa83
     stock: 8,
     rating: 4.4,
     description: "Rang-barang, xrustli bulg'or qalampiri aralashmasi.",

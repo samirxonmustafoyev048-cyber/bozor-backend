@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -107,6 +111,21 @@ export class ProductsService {
 
   async remove(id: string) {
     await this.ensureExists(id);
+
+    // Order lines point at the product, so deleting it would tear a hole in
+    // the order history. Say so, and point at the way out that does work.
+    const ordered = await this.prisma.orderItem.count({
+      where: { productId: id },
+    });
+
+    if (ordered > 0) {
+      throw new ConflictException(
+        `Bu mahsulot ${ordered} ta buyurtmada qatnashgan, shuning uchun uni ` +
+          `o'chirib bo'lmaydi — buyurtmalar tarixi buzilardi. ` +
+          `Sotuvdan olib qo'yish uchun zaxirasini 0 ga tushiring.`,
+      );
+    }
+
     await this.prisma.product.delete({ where: { id } });
     return { success: true };
   }
