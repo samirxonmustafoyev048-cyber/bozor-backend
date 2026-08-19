@@ -44,6 +44,8 @@ model Category {
   slug     String     @unique
   name     String
   icon     String
+  /// Tile photo shown in the storefront category strip.
+  imageUrl String?
   parentId String?
   parent   Category?  @relation("CategoryToParent", fields: [parentId], references: [id])
   children Category[] @relation("CategoryToParent")

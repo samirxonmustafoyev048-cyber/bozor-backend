@@ -8,6 +8,11 @@ const prisma = new PrismaClient({
   }),
 });
 
+/** Tile photo for the storefront category strip, self-hosted like the rest. */
+function categoryPhoto(slug: string) {
+  return `/photos/categories/${slug}.webp`;
+}
+
 const categories = [
   { slug: 'sut-mahsulotlari', name: 'Sut mahsulotlari', icon: '🥛' },
   { slug: 'non-va-nonushta', name: 'Non va nonushta', icon: '🍞' },
@@ -17,7 +22,7 @@ const categories = [
   { slug: 'uy-rozgor', name: "Uy-ro'zg'or", icon: '🧴' },
   { slug: 'shirinliklar', name: 'Shirinliklar', icon: '🍫' },
   { slug: 'muzqaymoq', name: 'Muzqaymoq', icon: '🍦' },
-];
+].map((c) => ({ ...c, imageUrl: categoryPhoto(c.slug) }));
 
 /**
  * Product photos are served from our own origin, not hot-linked.
