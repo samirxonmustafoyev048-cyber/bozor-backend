@@ -55,6 +55,7 @@ export class AdminService {
       priorUsersRaw,
       recentProductsRaw,
       priorProductsRaw,
+      soldItems,
     ] = await Promise.all([
       this.prisma.order.count(),
       this.prisma.user.count(),
@@ -118,6 +119,17 @@ export class AdminService {
       this.prisma.product.findMany({
         where: { createdAt: { gte: prevWindow14Start, lt: window14Start } },
         select: { createdAt: true },
+      }),
+      // Line price rather than the product's price today, so the totals stay
+      // true to what was actually charged.
+      this.prisma.orderItem.findMany({
+        select: {
+          price: true,
+          quantity: true,
+          product: {
+            select: { category: { select: { id: true, name: true, slug: true } } },
+          },
+        },
       }),
     ]);
 
@@ -187,6 +199,27 @@ export class AdminService {
       products: trendPercent(recentProductsRaw.length, priorProductsRaw.length),
     };
 
+    const categoryTotals = new Map<
+      string,
+      { id: string; name: string; slug: string; revenue: number; quantity: number }
+    >();
+    for (const item of soldItems) {
+      const c = item.product.category;
+      const entry = categoryTotals.get(c.id) ?? {
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+        revenue: 0,
+        quantity: 0,
+      };
+      entry.revenue += item.price * item.quantity;
+      entry.quantity += item.quantity;
+      categoryTotals.set(c.id, entry);
+    }
+    const salesByCategory = [...categoryTotals.values()].sort(
+      (a, b) => b.revenue - a.revenue,
+    );
+
     return {
       totalOrders,
       totalUsers,
@@ -201,6 +234,7 @@ export class AdminService {
         totalSold: t._sum.quantity ?? 0,
       })),
       dailySales,
+      salesByCategory,
       recentOrders: recentOrders.map((o) => ({
         id: o.id,
         orderNumber: o.orderNumber,
