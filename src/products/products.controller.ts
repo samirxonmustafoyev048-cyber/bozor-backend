@@ -36,8 +36,10 @@ export class ProductsController {
     return this.productsService.findRelated(slug);
   }
 
+  // The warehouse keeper receives new goods, so they register the product
+  // itself too. Editing and deleting stay with the admin.
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'OMBORCHI')
   @Post()
   create(@Body() dto: CreateProductDto) {
     return this.productsService.create(dto);
