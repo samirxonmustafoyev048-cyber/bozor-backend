@@ -6,8 +6,15 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Max,
   Min,
 } from 'class-validator';
+import {
+  MAX_MONEY,
+  MAX_MONEY_MESSAGE,
+  MAX_QUANTITY,
+  MAX_QUANTITY_MESSAGE,
+} from '../../common/limits';
 
 export enum PromoCodeTypeDto {
   PERCENT = 'PERCENT',
@@ -24,16 +31,19 @@ export class CreatePromoCodeDto {
 
   @IsInt()
   @Min(1)
+  @Max(MAX_MONEY, { message: MAX_MONEY_MESSAGE })
   value: number;
 
   @IsOptional()
   @IsInt()
   @Min(0)
+  @Max(MAX_MONEY, { message: MAX_MONEY_MESSAGE })
   minOrderAmount?: number;
 
   @IsOptional()
   @IsInt()
   @Min(1)
+  @Max(MAX_QUANTITY, { message: MAX_QUANTITY_MESSAGE })
   maxUses?: number;
 
   @IsOptional()

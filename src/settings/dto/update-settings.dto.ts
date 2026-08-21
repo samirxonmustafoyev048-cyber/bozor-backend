@@ -1,4 +1,12 @@
-import { IsEmail, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsEmail,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
+import { MAX_MONEY, MAX_MONEY_MESSAGE } from '../../common/limits';
 
 export class UpdateSettingsDto {
   @IsOptional()
@@ -16,6 +24,7 @@ export class UpdateSettingsDto {
   @IsOptional()
   @IsInt()
   @Min(0)
+  @Max(MAX_MONEY, { message: MAX_MONEY_MESSAGE })
   deliveryFee?: number;
 
   @IsOptional()

@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsImageUrl } from '../../common/image-url';
 
 export class CreateCategoryDto {
   @IsString()
@@ -14,7 +15,7 @@ export class CreateCategoryDto {
   icon: string;
 
   @IsOptional()
-  @IsString()
+  @IsImageUrl()
   imageUrl?: string;
 
   @IsOptional()

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { StockMovementType } from '../../generated/prisma/enums';
 import { AdjustStockDto } from './dto/adjust-stock.dto';
@@ -12,9 +16,7 @@ export class StockService {
 
   async overview(search?: string) {
     const products = await this.prisma.product.findMany({
-      where: search
-        ? { name: { contains: search } }
-        : undefined,
+      where: search ? { name: { contains: search } } : undefined,
       include: { category: true },
       orderBy: { stock: 'asc' },
     });
@@ -22,8 +24,9 @@ export class StockService {
     return {
       lowStockThreshold: LOW_STOCK_THRESHOLD,
       outOfStock: products.filter((p) => p.stock <= 0).length,
-      lowStock: products.filter((p) => p.stock > 0 && p.stock <= LOW_STOCK_THRESHOLD)
-        .length,
+      lowStock: products.filter(
+        (p) => p.stock > 0 && p.stock <= LOW_STOCK_THRESHOLD,
+      ).length,
       totalUnits: products.reduce((sum, p) => sum + p.stock, 0),
       products,
     };

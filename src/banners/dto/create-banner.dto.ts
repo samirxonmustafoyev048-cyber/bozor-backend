@@ -1,4 +1,11 @@
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { IsImageUrl } from '../../common/image-url';
 
 export class CreateBannerDto {
   @IsString()
@@ -9,8 +16,7 @@ export class CreateBannerDto {
   @IsString()
   subtitle?: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsImageUrl()
   imageUrl: string;
 
   @IsOptional()

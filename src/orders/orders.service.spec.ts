@@ -29,7 +29,9 @@ describe('OrdersService', () => {
         update: jest.fn(),
       },
     };
-    settingsService = { get: jest.fn().mockResolvedValue({ deliveryFee: 15000 }) };
+    settingsService = {
+      get: jest.fn().mockResolvedValue({ deliveryFee: 15000 }),
+    };
     promoCodesService = {
       validate: jest.fn(),
       incrementUsage: jest.fn(),

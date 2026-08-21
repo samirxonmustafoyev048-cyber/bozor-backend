@@ -5,8 +5,14 @@ import {
   IsInt,
   IsOptional,
   IsString,
+  Max,
   Min,
 } from 'class-validator';
+import {
+  MAX_MONEY,
+  MAX_MONEY_MESSAGE,
+  MAX_PAGE_SIZE,
+} from '../../common/limits';
 
 export type ProductSort = 'popular' | 'price-asc' | 'price-desc' | 'new';
 
@@ -19,12 +25,14 @@ export class QueryProductDto {
   @Type(() => Number)
   @IsInt()
   @Min(0)
+  @Max(MAX_MONEY, { message: MAX_MONEY_MESSAGE })
   minPrice?: number;
 
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(0)
+  @Max(MAX_MONEY, { message: MAX_MONEY_MESSAGE })
   maxPrice?: number;
 
   @IsOptional()
@@ -50,5 +58,6 @@ export class QueryProductDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
+  @Max(MAX_PAGE_SIZE)
   pageSize?: number = 20;
 }

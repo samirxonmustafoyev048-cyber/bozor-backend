@@ -46,9 +46,7 @@ export class OrdersService {
     );
     const settings = await this.settingsService.get();
     const deliveryFee =
-      dto.deliveryType === DeliveryType.YETKAZISH
-        ? settings.deliveryFee
-        : 0;
+      dto.deliveryType === DeliveryType.YETKAZISH ? settings.deliveryFee : 0;
 
     let discountAmount = 0;
     if (dto.promoCode) {

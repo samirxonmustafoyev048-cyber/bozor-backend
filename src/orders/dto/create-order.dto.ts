@@ -8,9 +8,11 @@ import {
   IsOptional,
   IsString,
   Matches,
+  Max,
   Min,
   ValidateNested,
 } from 'class-validator';
+import { MAX_QUANTITY, MAX_QUANTITY_MESSAGE } from '../../common/limits';
 import { DeliveryType, PaymentMethod } from '../../../generated/prisma/enums';
 import {
   UZ_PHONE_MESSAGE,
@@ -25,6 +27,7 @@ export class OrderItemInput {
 
   @IsInt()
   @Min(1)
+  @Max(MAX_QUANTITY, { message: MAX_QUANTITY_MESSAGE })
   quantity: number;
 }
 
@@ -51,7 +54,9 @@ export class CreateOrderDto {
 
   /** Last four digits only — the full number never reaches the server. */
   @IsOptional()
-  @Matches(/^\d{4}$/, { message: "Karta raqamining oxirgi 4 raqami kutilmoqda" })
+  @Matches(/^\d{4}$/, {
+    message: 'Karta raqamining oxirgi 4 raqami kutilmoqda',
+  })
   cardLast4?: string;
 
   @IsOptional()

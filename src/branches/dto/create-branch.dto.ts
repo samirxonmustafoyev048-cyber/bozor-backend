@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsImageUrl } from '../../common/image-url';
 
 export class CreateBranchDto {
   @IsString()
@@ -10,7 +11,7 @@ export class CreateBranchDto {
   address: string;
 
   @IsOptional()
-  @IsString()
+  @IsImageUrl()
   imageUrl?: string;
 
   @IsOptional()

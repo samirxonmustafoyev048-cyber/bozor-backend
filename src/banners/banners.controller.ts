@@ -22,7 +22,9 @@ export class BannersController {
 
   @Get()
   findAll(@Query('all') all?: string) {
-    return all === 'true' ? this.bannersService.findAll() : this.bannersService.findAllActive();
+    return all === 'true'
+      ? this.bannersService.findAll()
+      : this.bannersService.findAllActive();
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

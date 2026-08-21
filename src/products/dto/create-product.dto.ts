@@ -5,8 +5,16 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Max,
   Min,
 } from 'class-validator';
+import {
+  MAX_MONEY,
+  MAX_MONEY_MESSAGE,
+  MAX_QUANTITY,
+  MAX_QUANTITY_MESSAGE,
+} from '../../common/limits';
+import { IsImageUrl } from '../../common/image-url';
 
 export class CreateProductDto {
   @IsString()
@@ -27,11 +35,13 @@ export class CreateProductDto {
 
   @IsInt()
   @Min(0)
+  @Max(MAX_MONEY, { message: MAX_MONEY_MESSAGE })
   price: number;
 
   @IsOptional()
   @IsInt()
   @Min(0)
+  @Max(MAX_MONEY, { message: MAX_MONEY_MESSAGE })
   discountPrice?: number;
 
   @IsString()
@@ -43,7 +53,7 @@ export class CreateProductDto {
   emoji: string;
 
   @IsOptional()
-  @IsString()
+  @IsImageUrl()
   imageUrl?: string;
 
   @IsString()
@@ -53,6 +63,7 @@ export class CreateProductDto {
   @IsOptional()
   @IsInt()
   @Min(0)
+  @Max(MAX_QUANTITY, { message: MAX_QUANTITY_MESSAGE })
   stock?: number;
 
   @IsOptional()
@@ -61,5 +72,7 @@ export class CreateProductDto {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  @Max(5, { message: "Reyting 0 va 5 orasida bo'lishi kerak" })
   rating?: number;
 }

@@ -55,9 +55,7 @@ export class PromoCodesService {
       throw new BadRequestException('Promo-kodning muddati tugagan');
     }
     if (promo.maxUses !== null && promo.usedCount >= promo.maxUses) {
-      throw new BadRequestException(
-        'Promo-kod foydalanish limitiga yetgan',
-      );
+      throw new BadRequestException('Promo-kod foydalanish limitiga yetgan');
     }
     if (orderAmount < promo.minOrderAmount) {
       throw new BadRequestException(
