@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsIn,
@@ -35,8 +35,15 @@ export class QueryProductDto {
   @Max(MAX_MONEY, { message: MAX_MONEY_MESSAGE })
   maxPrice?: number;
 
+  /**
+   * Query values arrive as strings, and `Boolean('false')` is true — so
+   * `?discountOnly=false` used to switch the filter ON and the catalogue
+   * showed only discounted items. Compare against the text instead.
+   */
   @IsOptional()
-  @Type(() => Boolean)
+  @Transform(({ value }) =>
+    value === undefined ? undefined : value === true || value === 'true',
+  )
   @IsBoolean()
   discountOnly?: boolean;
 
